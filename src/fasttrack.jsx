@@ -508,7 +508,7 @@ export default function FastTrack(){
         <div style={card}>
           <span style={sLabel}>{T.weightRecord}</span>
           <div style={{display:"flex",gap:8}}>
-            <input type="number" placeholder={T.weightPlaceholder} value={wInput} onChange={e=>setWInput(e.target.value)}
+            <input type="text" inputMode="decimal" placeholder={T.weightPlaceholder} value={wInput} onChange={e=>setWInput(e.target.value)}
               style={{flex:1,padding:"10px 12px",borderRadius:10,border:"0.5px solid #E0E0D8",fontSize:15,color:C.gray800,outline:"none",background:"#FAFAF8"}}/>
             <button onClick={addWeight} style={{padding:"10px 18px",borderRadius:10,border:"none",background:C.teal400,color:"#fff",fontSize:13,fontWeight:500,cursor:"pointer"}}>{T.weightBtn}</button>
           </div>
