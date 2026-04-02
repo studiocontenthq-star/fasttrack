@@ -422,20 +422,19 @@ function TabTimer(){
                 : (lang==="zh"?"今天從簡單開始也很好":"A simple start is enough today")}
             </div>
 
-            {!isActive ? (
-              <button onClick={startFast} style={{ ...pBtn(C.tiffany700), height:48, borderRadius:16, fontWeight:600 }}>
-                {lang === "zh" ? "開始今天的 fasting" : "Start today's fast"}
-              </button>
-            ) : (
-              <>
-                <button onClick={endFast} style={{ ...pBtn(isDone ? C.lavender500 : C.tiffany700), height:48, borderRadius:16, fontWeight:600 }}>
-                  {isDone ? (lang === "zh" ? "查看今天紀錄" : "View today's log") : (lang === "zh" ? "完成 fasting" : "Complete fast")}
+            {!isActive
+              ?<button onClick={startFast} style={{...pBtn(C.tiffany700),height:48,borderRadius:16,fontWeight:600}}>
+                  {lang==="zh"?"開始今天的 fasting":"Start today's fast"}
+               </button>
+              :<>
+                <button onClick={endFast} style={{...pBtn(isDone?C.lavender500:C.tiffany700),height:48,borderRadius:16,fontWeight:600}}>
+                  {isDone?(lang==="zh"?"查看今天紀錄":"View today's log"):(lang==="zh"?"完成 fasting":"Complete fast")}
                 </button>
-                <button style={{ ...gBtn, height:44, borderRadius:16, background:"rgba(255,255,255,0.68)", border:"1px solid rgba(28,141,138,0.10)", color:C.tiffany800 }}>
-                  {lang === "zh" ? "改用 Gentle Mode" : "Switch to Gentle Mode"}
+                <button style={{...gBtn,height:44,borderRadius:16,background:"rgba(255,255,255,0.68)",border:"1px solid rgba(28,141,138,0.10)",color:C.tiffany800}}>
+                  {lang==="zh"?"改用 Gentle Mode":"Switch to Gentle Mode"}
                 </button>
               </>
-            )}
+            }
           </div>
 
           <div style={{
