@@ -1,16 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 
 const C = {
-  tiffany50:"#EAF8F7", tiffany100:"#D8F2F0", tiffany300:"#9DDFDB", tiffany400:"#73D0CC", tiffany500:"#4BC0BB", tiffany700:"#1C8D8A", tiffany800:"#146C69",
-  lavender50:"#F3F0FA", lavender100:"#ECE7F7", lavender300:"#CFC3F6", lavender500:"#8A74D6", lavender700:"#5D4AA7",
-  sage50:"#EEF4EE", sage400:"#88A88A", sage700:"#5C7461",
-  amber50:"#FBF2E4", amber400:"#BA7517", amber800:"#633806",
-  coral50:"#FAECE7", coral400:"#D85A30", coral800:"#712B13",
-  green50:"#ECF5E8", green400:"#6EAA55", green800:"#2D5A1E",
-  gray50:"#F7F6F2", gray100:"#F1EFE8", gray200:"#D8D4CA", gray400:"#8A887F", gray700:"#5C5A52", gray800:"#2F312D",
-  white:"#FFFFFF",
+  teal50:"#E1F5EE",teal400:"#1D9E75",teal600:"#0F6E56",teal800:"#085041",
+  purple50:"#EEEDFE",purple400:"#7F77DD",purple600:"#534AB7",purple800:"#3C3489",
+  amber50:"#FAEEDA",amber400:"#BA7517",amber800:"#633806",
+  coral50:"#FAECE7",coral400:"#D85A30",coral800:"#712B13",
+  green50:"#EAF3DE",green400:"#639922",green800:"#27500A",
+  gray50:"#F1EFE8",gray200:"#B4B2A9",gray400:"#888780",gray800:"#444441",
 };
-
 
 const I18N = {
   zh:{
@@ -132,18 +129,18 @@ const I18N = {
 const ZONE_DATA=[
   {h:0, bg:C.amber50, dot:C.amber400,txt:C.amber800},
   {h:4, bg:C.green50, dot:C.green400,txt:C.green800},
-  {h:8, bg:C.tiffany50,  dot:C.tiffany500, txt:C.tiffany800},
-  {h:12,bg:C.tiffany50,  dot:C.tiffany700, txt:C.tiffany800},
-  {h:16,bg:C.lavender50,dot:C.lavender500,txt:C.lavender700},
-  {h:24,bg:C.lavender50,dot:C.lavender700,txt:C.lavender700},
+  {h:8, bg:C.teal50,  dot:C.teal400, txt:C.teal800},
+  {h:12,bg:C.teal50,  dot:C.teal600, txt:C.teal800},
+  {h:16,bg:C.purple50,dot:C.purple400,txt:C.purple800},
+  {h:24,bg:C.purple50,dot:C.purple600,txt:C.purple800},
 ];
 function getZoneIdx(hrs){let z=0;for(let i=0;i<ZONE_DATA.length;i++){if(hrs>=ZONE_DATA[i].h)z=i;}return z;}
 
 const PHASE_DATA=[
   {id:"menstrual", days:[1,7], bg:C.coral50, dot:C.coral400,txt:C.coral800},
   {id:"follicular",days:[8,14],bg:C.green50, dot:C.green400,txt:C.green800},
-  {id:"ovulation", days:[15,18],bg:C.tiffany50, dot:C.tiffany500, txt:C.tiffany800},
-  {id:"luteal",    days:[19,28],bg:C.lavender50,dot:C.lavender500,txt:C.lavender700},
+  {id:"ovulation", days:[15,18],bg:C.teal50, dot:C.teal400, txt:C.teal800},
+  {id:"luteal",    days:[19,28],bg:C.purple50,dot:C.purple400,txt:C.purple800},
 ];
 function getPhaseIdx(day){
   const i=PHASE_DATA.findIndex(p=>day>=p.days[0]&&day<=p.days[1]);
@@ -177,15 +174,6 @@ function last14Days(){
 }
 function ld(k,def){try{const v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch{return def;}}
 function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
-
-
-function parseWeightInput(raw){
-  if(raw==null) return NaN;
-  const cleaned = String(raw).trim().replace(",", ".").replace(/[^0-9.]/g, "");
-  const parts = cleaned.split(".");
-  const normalized = parts.length <= 2 ? cleaned : `${parts.shift()}.${parts.join("")}`;
-  return parseFloat(normalized);
-}
 
 function Ring({pct,color,size=188,stroke=13,children}){
   const r=(size-stroke)/2,circ=2*Math.PI*r,offset=circ*(1-Math.min(1,pct));
@@ -272,7 +260,7 @@ export default function FastTrack(){
     showToast(done?T.toastDone(hrs,streak+1):pData?.id==="luteal"?T.toastEarlyLuteal(hrs):T.toastEarly(hrs));
   }
   function addWeight(){
-    const v=parseWeightInput(wInput);
+    const v=parseFloat(wInput);
     if(isNaN(v)||v<20||v>300){showToast(T.toastWeightErr);return;}
     setWeights(w=>[...w.slice(-59),{date:todayKey(),kg:v,ts:Date.now()}]);
     setWInput("");showToast(T.toastWeight(v));
@@ -280,7 +268,7 @@ export default function FastTrack(){
 
   const card={background:"#fff",border:"0.5px solid #E8E8E2",borderRadius:14,padding:"13px 15px",marginBottom:12};
   const sLabel={fontSize:11,color:C.gray400,fontWeight:500,letterSpacing:.7,marginBottom:10,display:"block"};
-  const pBtn=(bg=C.tiffany500)=>({width:"100%",padding:14,borderRadius:14,border:"none",background:bg,color:"#fff",fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:8});
+  const pBtn=(bg=C.teal400)=>({width:"100%",padding:14,borderRadius:14,border:"none",background:bg,color:"#fff",fontSize:14,fontWeight:500,cursor:"pointer",marginBottom:8});
   const gBtn={width:"100%",padding:10,borderRadius:14,border:"0.5px solid #DDD",background:"transparent",fontSize:12,color:C.gray400,cursor:"pointer",marginBottom:8};
 
   if(!onboarded){
@@ -292,7 +280,7 @@ export default function FastTrack(){
         <div style={{width:"100%",maxWidth:340}}>
           <div style={{display:"flex",gap:6,marginBottom:32,justifyContent:"center"}}>
             {T.ob.map((_,i)=>(
-              <div key={i} style={{height:4,borderRadius:2,flex:1,background:i<=obStep?C.tiffany500:C.gray50,transition:"background .3s"}}/>
+              <div key={i} style={{height:4,borderRadius:2,flex:1,background:i<=obStep?C.teal400:C.gray50,transition:"background .3s"}}/>
             ))}
           </div>
           <h1 style={{fontSize:22,fontWeight:500,color:C.gray800,marginBottom:8}}>{T.ob[obStep].title}</h1>
@@ -300,13 +288,13 @@ export default function FastTrack(){
 
           {obStep===0&&(
             <div style={{display:"flex",flexDirection:"column",gap:12}}>
-              <div style={{background:C.tiffany50,borderRadius:14,padding:"14px 16px"}}>
-                <p style={{fontSize:13,fontWeight:500,color:C.tiffany800,marginBottom:4}}>{T.obC1T}</p>
-                <p style={{fontSize:12,color:C.tiffany700,lineHeight:1.6}}>{T.obC1D}</p>
+              <div style={{background:C.teal50,borderRadius:14,padding:"14px 16px"}}>
+                <p style={{fontSize:13,fontWeight:500,color:C.teal800,marginBottom:4}}>{T.obC1T}</p>
+                <p style={{fontSize:12,color:C.teal600,lineHeight:1.6}}>{T.obC1D}</p>
               </div>
-              <div style={{background:C.lavender50,borderRadius:14,padding:"14px 16px"}}>
-                <p style={{fontSize:13,fontWeight:500,color:C.lavender700,marginBottom:4}}>{T.obC2T}</p>
-                <p style={{fontSize:12,color:C.lavender700,lineHeight:1.6}}>{T.obC2D}</p>
+              <div style={{background:C.purple50,borderRadius:14,padding:"14px 16px"}}>
+                <p style={{fontSize:13,fontWeight:500,color:C.purple800,marginBottom:4}}>{T.obC2T}</p>
+                <p style={{fontSize:12,color:C.purple600,lineHeight:1.6}}>{T.obC2D}</p>
               </div>
               <button onClick={()=>setObStep(1)} style={{...pBtn(),marginTop:8,marginBottom:0}}>{T.obNext}</button>
             </div>
@@ -316,12 +304,12 @@ export default function FastTrack(){
             <div style={{display:"flex",flexDirection:"column",gap:8}}>
               {PLANS.map(p=>(
                 <button key={p.id} onClick={()=>{setPlanId(p.id);setObStep(2);}}
-                  style={{padding:"14px 18px",borderRadius:14,border:`1.5px solid ${planId===p.id?C.tiffany500:"#E8E8E2"}`,background:planId===p.id?C.tiffany50:"#fff",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  style={{padding:"14px 18px",borderRadius:14,border:`1.5px solid ${planId===p.id?C.teal400:"#E8E8E2"}`,background:planId===p.id?C.teal50:"#fff",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                   <div style={{textAlign:"left"}}>
                     <div style={{fontSize:15,fontWeight:500,color:C.gray800}}>{p.id}</div>
                     <div style={{fontSize:12,color:C.gray400,marginTop:2}}>{T.planSub[p.id]}</div>
                   </div>
-                  <div style={{fontSize:12,color:C.tiffany700}}>{T.fastHours(p.h)}</div>
+                  <div style={{fontSize:12,color:C.teal600}}>{T.fastHours(p.h)}</div>
                 </button>
               ))}
             </div>
@@ -332,7 +320,7 @@ export default function FastTrack(){
               <div style={{background:C.gray50,borderRadius:14,padding:"14px 16px",marginBottom:4}}>
                 <p style={{fontSize:12,color:C.gray400,lineHeight:1.6}}>{T.cyclePrivacy}</p>
               </div>
-              <button onClick={()=>{setCycleOn(true);setObStep(3);}} style={{...pBtn(C.lavender500),marginBottom:0}}>{T.obEnableCycle}</button>
+              <button onClick={()=>{setCycleOn(true);setObStep(3);}} style={{...pBtn(C.purple400),marginBottom:0}}>{T.obEnableCycle}</button>
               <button onClick={()=>{setCycleOn(false);setOnboarded(true);sv("ft3_onboarded",true);}} style={gBtn}>{T.obSkip}</button>
             </div>
           )}
@@ -352,7 +340,7 @@ export default function FastTrack(){
                 </div>
               </div>
               <button onClick={()=>{setOnboarded(true);sv("ft3_onboarded",true);}} disabled={!cycleStart}
-                style={{...pBtn(cycleStart?C.tiffany500:C.gray200),cursor:cycleStart?"pointer":"not-allowed",marginBottom:0}}>{T.obFinish}</button>
+                style={{...pBtn(cycleStart?C.teal400:C.gray200),cursor:cycleStart?"pointer":"not-allowed",marginBottom:0}}>{T.obFinish}</button>
             </div>
           )}
         </div>
@@ -360,193 +348,73 @@ export default function FastTrack(){
     );
   }
 
-  
-function TabTimer(){
-    const ringColor=isDone?C.lavender500:pData?pData.dot:C.tiffany700;
-    const supportTitle = lang==="zh"
-      ? (pData?.id==="luteal" ? "今天可能比較適合溫和一點" : isActive ? "正在進行中，也可以隨時調整" : "今天從簡單開始也很好")
-      : (pData?.id==="luteal" ? "A gentler day may fit better today" : isActive ? "You are in progress — you can still adjust" : "A simple start is enough today");
-    const supportBody = lang==="zh"
-      ? (pData?.id==="luteal"
-          ? "黃體期食慾上升很常見，不代表失控。縮短窗口也是照顧自己。"
-          : isActive
-            ? "如果今天特別餓、累或睡不好，提早結束不算失敗。"
-            : "先做出節奏，比一次做很完美更重要。")
-      : (pData?.id==="luteal"
-          ? "Appetite often rises in the luteal phase. Shortening your window is self-care, not failure."
-          : isActive
-            ? "If today feels extra hard, ending early still counts."
-            : "Building rhythm matters more than doing it perfectly once.");
-
+  function TabTimer(){
+    const ringColor=isDone?C.purple400:pData?pData.dot:C.teal400;
     return(
       <div style={{paddingTop:16}}>
-        <div style={{
-          background:"linear-gradient(180deg,#FBFAF7 0%, #F7F6F2 55%, #F3F1EC 100%)",
-          margin:"-16px -20px 0",
-          padding:"16px 20px 4px"
-        }}>
-          <div style={{
-            background:`linear-gradient(135deg, ${C.tiffany100} 0%, ${C.tiffany300} 100%)`,
-            borderRadius:24,
-            padding:"18px 18px 16px",
-            boxShadow:"0 10px 30px rgba(28,141,138,0.10)",
-            marginBottom:14
-          }}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-              <div>
-                <div style={{fontSize:12,fontWeight:500,color:"#478C77",marginBottom:4}}>{lang==="zh"?"今天的斷食":"Today's Fast"}</div>
-                <div style={{fontSize:16,fontWeight:600,color:C.tiffany800}}>{plan.id}</div>
-              </div>
-              <div style={{padding:"7px 12px",borderRadius:999,background:"rgba(255,255,255,0.70)",fontSize:12,fontWeight:500,color:C.tiffany800}}>
-                {pData ? (lang==="zh" ? `${pI18n.name} · Day ${cDay}` : `${pI18n.name} · Day ${cDay}`) : (lang==="zh"?"Personal Plan":"Personal Plan")}
-              </div>
-            </div>
-
-            <div style={{display:"flex",justifyContent:"center",margin:"8px 0 12px"}}>
-              <Ring pct={pct} color={ringColor}>
-                <div style={{fontFamily:"'DM Mono',monospace",fontSize:34,fontWeight:500,color:ringColor,letterSpacing:-1.5,lineHeight:1}}>
-                  {isActive?fmt(isDone?elapsed:remaining):`${plan.h}:00:00`}
-                </div>
-                <div style={{fontSize:11,color:C.gray400,marginTop:6}}>
-                  {isActive?(isDone?T.achieved:T.remaining):T.goalTime}
-                </div>
-                {isActive&&<div style={{fontSize:10,color:"#6F8F84",marginTop:3}}>{T.elapsedPfx} {fmtHM(elapsed)}</div>}
-              </Ring>
-            </div>
-
-            <div style={{fontSize:12,color:C.gray700,textAlign:"center",marginBottom:14}}>
-              {isActive
-                ? (isDone
-                    ? (lang==="zh"?"你今天已經完成了":"You completed today’s fast")
-                    : (lang==="zh"?`距離目標還有 ${fmtHM(remaining)}`:`${fmtHM(remaining)} left to goal`))
-                : (lang==="zh"?"今天從簡單開始也很好":"A simple start is enough today")}
-            </div>
-
-            {!isActive
-              ?<button onClick={startFast} style={{...pBtn(C.tiffany700),height:48,borderRadius:16,fontWeight:600}}>
-                  {lang==="zh"?"開始今天的 fasting":"Start today's fast"}
-               </button>
-              :<>
-                <button onClick={endFast} style={{...pBtn(isDone?C.lavender500:C.tiffany700),height:48,borderRadius:16,fontWeight:600}}>
-                  {isDone?(lang==="zh"?"查看今天紀錄":"View today's log"):(lang==="zh"?"完成 fasting":"Complete fast")}
-                </button>
-                <button style={{...gBtn,height:44,borderRadius:16,background:"rgba(255,255,255,0.68)",border:"1px solid rgba(28,141,138,0.10)",color:C.tiffany800}}>
-                  {lang==="zh"?"改用 Gentle Mode":"Switch to Gentle Mode"}
-                </button>
-              </>
-            }
-          </div>
-
-          <div style={{
-            background:C.lavender50,
-            border:"1px solid rgba(138,116,214,0.10)",
-            borderRadius:18,
-            padding:"14px 16px",
-            marginBottom:14,
-            display:"flex",
-            justifyContent:"space-between",
-            gap:12,
-            alignItems:"center"
-          }}>
-            <div>
-              <div style={{fontSize:13,fontWeight:600,color:C.lavender700}}>
-                {pData ? T.cycleDay(cDay,pI18n.name) : (lang==="zh"?"今日身體節奏":"Today's rhythm")}
-              </div>
-              <div style={{fontSize:12,color:C.lavender500,marginTop:4,lineHeight:1.5}}>
-                {pData ? supportTitle : (lang==="zh"?"每個人的狀態都不同，今天也可以先用溫和模式觀察自己。":"Every body is different — you can choose a gentler mode and observe today.")}
-              </div>
-            </div>
-            <button style={{height:32,padding:"0 12px",borderRadius:999,border:"none",background:"rgba(138,116,214,0.12)",color:C.lavender700,fontSize:12,fontWeight:500,cursor:"pointer"}}>
-              {lang==="zh"?"切換":"Switch"}
-            </button>
-          </div>
-
-          <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:2,marginBottom:14}}>
-            {[
-              lang==="zh"?"+ 喝水":"+ Water",
-              lang==="zh"?"+ 體重":"+ Weight",
-              lang==="zh"?"+ 症狀":"+ Symptoms",
-            ].map((label,i)=>(
-              <button key={label} onClick={()=>{
-                if(i===0) setHydration(h=>Math.min(20,h+1));
-                if(i===1) setTab("weight");
-                if(i===2) setTab("settings");
-              }} style={{
-                whiteSpace:"nowrap",
-                height:44,
-                padding:"0 16px",
-                borderRadius:999,
-                border:"1px solid rgba(68,68,65,0.06)",
-                background:"#fff",
-                fontSize:13,
-                fontWeight:500,
-                color:i===0?C.tiffany700:C.gray700,
-                boxShadow:"0 4px 14px rgba(0,0,0,0.04)",
-                cursor:"pointer"
-              }}>{label}</button>
-            ))}
-          </div>
-
-          <div style={{
-            background:"linear-gradient(135deg, #F3F0FA 0%, #ECE7F7 100%)",
-            borderRadius:22,
-            padding:"18px",
-            marginBottom:14
-          }}>
-            <div style={{fontSize:11,fontWeight:600,letterSpacing:1.2,textTransform:"uppercase",color:"#766FA8",marginBottom:8}}>
-              {lang==="zh"?"今日支持":"Today's support"}
-            </div>
-            <div style={{fontSize:20,lineHeight:1.35,fontWeight:600,color:C.lavender700,letterSpacing:-0.3}}>
-              {supportTitle}
-            </div>
-            <div style={{fontSize:13,lineHeight:1.7,color:"#5A5780",marginTop:8,maxWidth:"92%"}}>
-              {supportBody}
-            </div>
-            <div style={{display:"flex",alignItems:"center",gap:14,marginTop:16}}>
-              <button style={{
-                height:40,padding:"0 16px",borderRadius:999,border:"none",background:C.lavender700,color:"#fff",fontSize:13,fontWeight:600,cursor:"pointer"
-              }}>
-                {lang==="zh"?"看重點":"Read"}
+        <div style={{display:"flex",gap:6,marginBottom:16}}>
+          {PLANS.map(p=>{
+            const active=p.id===planId;
+            return(
+              <button key={p.id} onClick={()=>{if(!isActive)setPlanId(p.id);}}
+                style={{flex:1,padding:"9px 4px",borderRadius:11,border:active?`1.5px solid ${C.teal400}`:"0.5px solid #E8E8E2",background:active?C.teal50:"#fff",cursor:isActive?"not-allowed":"pointer",opacity:isActive&&!active?0.45:1}}>
+                <div style={{fontSize:12,fontWeight:500,color:active?C.teal600:C.gray400}}>{p.id}</div>
+                <div style={{fontSize:9,color:active?C.teal400:C.gray200,marginTop:1}}>{T.planSub[p.id]}</div>
               </button>
-              <button style={{border:"none",background:"transparent",color:C.lavender700,fontSize:13,fontWeight:500,cursor:"pointer"}}>
-                {lang==="zh"?"看影片":"Watch video"}
-              </button>
-            </div>
-          </div>
+            );
+          })}
         </div>
-
-        {isActive&&(
-          <div style={{...card,borderRadius:20,boxShadow:"0 4px 14px rgba(0,0,0,0.04)"}}>
-            <span style={sLabel}>{lang==="zh"?"斷食時間軸":"Fasting timeline"}</span>
-            <div style={{background:zData.bg,borderRadius:14,padding:"12px 14px",display:"flex",gap:10,alignItems:"flex-start"}}>
-              <div style={{width:9,height:9,borderRadius:"50%",background:zData.dot,marginTop:5,flexShrink:0}}/>
-              <div>
-                <div style={{fontSize:13,fontWeight:600,color:zData.txt}}>{zI18n.label}</div>
-                <div style={{fontSize:11,color:zData.dot,marginTop:3,lineHeight:1.5}}>{zI18n.desc}</div>
-              </div>
+        <div style={{display:"flex",justifyContent:"center",marginBottom:14}}>
+          <Ring pct={pct} color={ringColor}>
+            <div style={{fontFamily:"'DM Mono',monospace",fontSize:28,fontWeight:500,color:ringColor,letterSpacing:-1.5,lineHeight:1}}>
+              {isActive?fmt(isDone?elapsed:remaining):`${plan.h}:00:00`}
             </div>
-            <div style={{fontSize:11,color:C.gray400,marginTop:10,lineHeight:1.6}}>
-              {lang==="zh"
-                ? "這些是一般常見變化，用來幫你理解現在可能發生什麼，不代表每個人都會一樣。"
-                : "These are common patterns to help you understand what may be happening. Everyone is different."}
+            <div style={{fontSize:11,color:C.gray400,marginTop:4}}>{isActive?(isDone?T.achieved:T.remaining):T.goalTime}</div>
+            {isActive&&<div style={{fontSize:10,color:C.gray200,marginTop:2}}>{T.elapsedPfx} {fmtHM(elapsed)}</div>}
+          </Ring>
+        </div>
+        {isActive&&(
+          <div style={{background:zData.bg,borderRadius:13,padding:"11px 14px",marginBottom:10,display:"flex",gap:9,alignItems:"flex-start"}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:zData.dot,marginTop:5,flexShrink:0}}/>
+            <div>
+              <div style={{fontSize:12,fontWeight:500,color:zData.txt}}>{zI18n.label}</div>
+              <div style={{fontSize:11,color:zData.dot,marginTop:2,lineHeight:1.4}}>{zI18n.desc}</div>
             </div>
           </div>
         )}
-
-        <div style={{...card,borderRadius:20,boxShadow:"0 4px 14px rgba(0,0,0,0.04)"}}>
-          <span style={sLabel}>{lang==="zh"?"今日喝水":"Hydration"}</span>
+        {pData&&(
+          <div style={{background:pData.bg,borderRadius:13,padding:"11px 14px",marginBottom:10,display:"flex",gap:9,alignItems:"flex-start"}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:pData.dot,marginTop:5,flexShrink:0}}/>
+            <div>
+              <div style={{fontSize:12,fontWeight:500,color:pData.txt}}>
+                {T.cycleDay(cDay,pI18n.name)}
+                <span style={{fontSize:10,fontWeight:400,color:pData.dot,marginLeft:6}}>{T.cycleSuggest(pI18n.rec)}</span>
+              </div>
+              <div style={{fontSize:11,color:pData.dot,marginTop:2,lineHeight:1.5}}>{pI18n.hint}</div>
+            </div>
+          </div>
+        )}
+        {!isActive
+          ?<button onClick={startFast} style={pBtn()}>{T.startFast}</button>
+          :<>
+            <button onClick={endFast} style={pBtn(isDone?C.purple400:C.teal400)}>{isDone?T.endFast:T.earlyEnd}</button>
+            <button style={gBtn}>{T.editStart}</button>
+          </>
+        }
+        <div style={card}>
+          <span style={sLabel}>{T.hydrationTitle}</span>
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-            <button onClick={()=>setHydration(h=>Math.max(0,h-1))} style={{width:36,height:36,borderRadius:10,border:"1px solid #E0E0D8",background:"transparent",fontSize:18,cursor:"pointer",color:C.gray400}}>−</button>
+            <button onClick={()=>setHydration(h=>Math.max(0,h-1))} style={{width:34,height:34,borderRadius:9,border:"0.5px solid #E0E0D8",background:"transparent",fontSize:18,cursor:"pointer",color:C.gray400}}>−</button>
             <div style={{flex:1,textAlign:"center"}}>
-              <span style={{fontSize:30,fontWeight:500,color:C.tiffany700,fontFamily:"'DM Mono',monospace"}}>{hydration}</span>
+              <span style={{fontSize:28,fontWeight:500,color:C.teal600,fontFamily:"'DM Mono',monospace"}}>{hydration}</span>
               <span style={{fontSize:12,color:C.gray400,marginLeft:5}}>{T.cups}</span>
             </div>
-            <button onClick={()=>setHydration(h=>Math.min(20,h+1))} style={{width:36,height:36,borderRadius:10,border:"none",background:C.tiffany50,fontSize:18,cursor:"pointer",color:C.tiffany700}}>+</button>
+            <button onClick={()=>setHydration(h=>Math.min(20,h+1))} style={{width:34,height:34,borderRadius:9,border:"none",background:C.teal50,fontSize:18,cursor:"pointer",color:C.teal600}}>+</button>
           </div>
           <div style={{display:"flex",gap:4}}>
-            {Array.from({length:8},(_,i)=><div key={i} style={{flex:1,height:6,borderRadius:999,background:i<hydration?C.tiffany500:C.gray100,transition:"background .2s"}}/>)}
+            {Array.from({length:8},(_,i)=><div key={i} style={{flex:1,height:5,borderRadius:3,background:i<hydration?C.teal400:C.gray50,transition:"background .2s"}}/>)}
           </div>
-          <div style={{fontSize:10,color:C.gray400,marginTop:6,textAlign:"center"}}>{T.hydrationTip}</div>
+          <div style={{fontSize:10,color:C.gray200,marginTop:5,textAlign:"center"}}>{T.hydrationTip}</div>
         </div>
       </div>
     );
@@ -560,7 +428,7 @@ function TabTimer(){
         <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:14}}>
           {[{l:T.streakLabel,v:streak},{l:T.doneLabel,v:done},{l:T.recordLabel,v:total}].map(s=>(
             <div key={s.l} style={{background:"#fff",border:"0.5px solid #E8E8E2",borderRadius:13,padding:"12px 10px",textAlign:"center"}}>
-              <div style={{fontSize:22,fontWeight:500,color:C.tiffany700,fontFamily:"'DM Mono',monospace"}}>{s.v}</div>
+              <div style={{fontSize:22,fontWeight:500,color:C.teal600,fontFamily:"'DM Mono',monospace"}}>{s.v}</div>
               <div style={{fontSize:10,color:C.gray400,marginTop:3}}>{s.l}</div>
             </div>
           ))}
@@ -570,8 +438,8 @@ function TabTimer(){
           <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:5}}>
             {days.map(d=>{
               const rec=records[d],isToday=d===todayKey(),dn=rec?.done,pt=rec&&!rec.done;
-              const bg=isToday&&isActive?C.tiffany500:dn?C.tiffany50:pt?C.amber50:C.gray50;
-              const cl=isToday&&isActive?"#fff":dn?C.tiffany800:pt?C.amber800:C.gray200;
+              const bg=isToday&&isActive?C.teal400:dn?C.teal50:pt?C.amber50:C.gray50;
+              const cl=isToday&&isActive?"#fff":dn?C.teal800:pt?C.amber800:C.gray200;
               return(
                 <div key={d} style={{aspectRatio:"1",borderRadius:9,background:bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:1}}>
                   <span style={{fontSize:11,fontWeight:500,color:cl}}>{d.split("-")[2]}</span>
@@ -581,7 +449,7 @@ function TabTimer(){
             })}
           </div>
           <div style={{display:"flex",gap:14,marginTop:10,flexWrap:"wrap"}}>
-            {[{bg:C.tiffany50,c:C.tiffany800,l:T.reached},{bg:C.amber50,c:C.amber800,l:T.partial},{bg:C.gray50,c:C.gray200,l:T.noRecord}].map(x=>(
+            {[{bg:C.teal50,c:C.teal800,l:T.reached},{bg:C.amber50,c:C.amber800,l:T.partial},{bg:C.gray50,c:C.gray200,l:T.noRecord}].map(x=>(
               <div key={x.l} style={{display:"flex",alignItems:"center",gap:5}}>
                 <div style={{width:8,height:8,borderRadius:3,background:x.bg,border:`0.5px solid ${x.c}`}}/>
                 <span style={{fontSize:10,color:C.gray400}}>{x.l}</span>
@@ -598,8 +466,8 @@ function TabTimer(){
                 <div style={{fontSize:11,color:C.gray400,marginTop:1}}>{T.target(r.planH)}</div>
               </div>
               <div style={{textAlign:"right"}}>
-                <div style={{fontSize:14,fontWeight:500,color:r.done?C.tiffany700:C.amber400,fontFamily:"'DM Mono',monospace"}}>{((r.elapsed||0)/3600000).toFixed(1)}h</div>
-                <div style={{fontSize:10,color:r.done?C.tiffany500:C.amber400,marginTop:1}}>{r.done?T.reached:T.partial}</div>
+                <div style={{fontSize:14,fontWeight:500,color:r.done?C.teal600:C.amber400,fontFamily:"'DM Mono',monospace"}}>{((r.elapsed||0)/3600000).toFixed(1)}h</div>
+                <div style={{fontSize:10,color:r.done?C.teal400:C.amber400,marginTop:1}}>{r.done?T.reached:T.partial}</div>
               </div>
             </div>
           ))}
@@ -609,40 +477,82 @@ function TabTimer(){
     );
   }
 
+
   function TabWeight(){
-    const last=weights.slice(-1)[0],prev=weights.slice(-2,-1)[0];
-    const diff=last&&prev?(last.kg-prev.kg):null;
-    const pts=weights.slice(-14);
-    const cW=320,cH=110,minKg=pts.length?Math.min(...pts.map(p=>p.kg))-1:50,maxKg=pts.length?Math.max(...pts.map(p=>p.kg))+1:80;
-    const toX=(i)=>pts.length<2?cW/2:i*(cW-20)/(pts.length-1)+10;
-    const toY=(kg)=>cH-((kg-minKg)/(maxKg-minKg))*(cH-10)-5;
+    const last = weights.slice(-1)[0];
+    const prev = weights.slice(-2, -1)[0];
+    const diff = last && prev ? (last.kg - prev.kg) : null;
+    const pts = weights.slice(-14);
+
+    const cW = 320;
+    const cH = 110;
+    const minKg = pts.length ? Math.min(...pts.map(p => p.kg)) - 1 : 50;
+    const maxKg = pts.length ? Math.max(...pts.map(p => p.kg)) + 1 : 80;
+
+    const toX = (i) => pts.length < 2 ? cW / 2 : i * (cW - 20) / (pts.length - 1) + 10;
+    const toY = (kg) => cH - ((kg - minKg) / (maxKg - minKg || 1)) * (cH - 10) - 5;
+
+    function addWeight(){
+      const cleaned = String(wInput)
+        .replace(/,/g, ".")
+        .replace(/[^0-9.]/g, "")
+        .replace(/(\..*)\./g, "$1");
+
+      const v = parseFloat(cleaned);
+
+      if (isNaN(v) || v < 20 || v > 300) {
+        showToast(T.toastWeightErr);
+        return;
+      }
+
+      setWeights(w => [
+        ...w.slice(-59),
+        { date: todayKey(), kg: v, ts: Date.now() }
+      ]);
+
+      setWInput("");
+      showToast(T.toastWeight(v));
+    }
+
     return(
       <div style={{paddingTop:16}}>
         <div style={{...card,display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
           <div>
             <div style={{fontSize:11,color:C.gray400,marginBottom:4}}>{T.currentWeight}</div>
             <div style={{fontSize:32,fontWeight:500,color:C.gray800,fontFamily:"'DM Mono',monospace"}}>
-              {last?last.kg.toFixed(1):"--"}<span style={{fontSize:16,color:C.gray400}}> kg</span>
+              {last ? last.kg.toFixed(1) : "--"}<span style={{fontSize:16,color:C.gray400}}> kg</span>
             </div>
-            {diff!==null&&<div style={{fontSize:12,color:diff<0?C.tiffany700:C.coral400,marginTop:4}}>{T.weightVsPrev(diff<0?T.weightDown:T.weightUp,Math.abs(diff).toFixed(1))}</div>}
+            {diff !== null && (
+              <div style={{fontSize:12,color:diff<0?C.teal600:C.coral400,marginTop:4}}>
+                {T.weightVsPrev(diff<0?T.weightDown:T.weightUp,Math.abs(diff).toFixed(1))}
+              </div>
+            )}
           </div>
-          {last&&<div style={{fontSize:11,color:C.gray200}}>{last.date}</div>}
+          {last && <div style={{fontSize:11,color:C.gray200}}>{last.date}</div>}
         </div>
         {pts.length>1&&(
           <div style={card}>
             <span style={sLabel}>{T.weightTrend}</span>
             <svg width="100%" viewBox={`0 0 ${cW} ${cH}`}>
-              {pts.map((_,i)=>i>0&&<line key={i} x1={toX(i-1)} y1={toY(pts[i-1].kg)} x2={toX(i)} y2={toY(pts[i].kg)} stroke={C.tiffany500} strokeWidth="2" strokeLinecap="round"/>)}
-              {pts.map((p,i)=><circle key={i} cx={toX(i)} cy={toY(p.kg)} r="4" fill={C.tiffany500}/>)}
+              {pts.map((_,i)=>i>0?(
+                <line key={i} x1={toX(i-1)} y1={toY(pts[i-1].kg)} x2={toX(i)} y2={toY(pts[i].kg)} stroke={C.teal400} strokeWidth="2" strokeLinecap="round"/>
+              ):null)}
+              {pts.map((p,i)=><circle key={i} cx={toX(i)} cy={toY(p.kg)} r="4" fill={C.teal400}/>)}
             </svg>
           </div>
         )}
         <div style={card}>
           <span style={sLabel}>{T.weightRecord}</span>
           <div style={{display:"flex",gap:8}}>
-            <input type="text" inputMode="decimal" placeholder={T.weightPlaceholder} value={wInput} onChange={e=>setWInput(e.target.value)}
-              style={{flex:1,padding:"10px 12px",borderRadius:10,border:"0.5px solid #E0E0D8",fontSize:15,color:C.gray800,outline:"none",background:"#FAFAF8"}}/>
-            <button onClick={addWeight} style={{padding:"10px 18px",borderRadius:10,border:"none",background:C.tiffany500,color:"#fff",fontSize:13,fontWeight:500,cursor:"pointer"}}>{T.weightBtn}</button>
+            <input
+              type="text"
+              inputMode="decimal"
+              placeholder={T.weightPlaceholder}
+              value={wInput}
+              onChange={e=>setWInput(e.target.value)}
+              style={{flex:1,padding:"10px 12px",borderRadius:10,border:"0.5px solid #E0E0D8",fontSize:15,color:C.gray800,outline:"none",background:"#FAFAF8"}}
+            />
+            <button onClick={addWeight} style={{padding:"10px 18px",borderRadius:10,border:"none",background:C.teal400,color:"#fff",fontSize:13,fontWeight:500,cursor:"pointer"}}>{T.weightBtn}</button>
           </div>
           <p style={{fontSize:10,color:C.gray200,marginTop:8}}>{T.weightTip}</p>
         </div>
@@ -652,7 +562,7 @@ function TabTimer(){
             {weights.slice(-7).reverse().map((w,i)=>(
               <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"0.5px solid #F2F2EE"}}>
                 <span style={{fontSize:13,color:C.gray800}}>{w.date}</span>
-                <span style={{fontSize:13,fontWeight:500,color:C.tiffany700,fontFamily:"'DM Mono',monospace"}}>{w.kg.toFixed(1)} kg</span>
+                <span style={{fontSize:13,fontWeight:500,color:C.teal600,fontFamily:"'DM Mono',monospace"}}>{w.kg.toFixed(1)} kg</span>
               </div>
             ))}
           </div>
@@ -670,7 +580,7 @@ function TabTimer(){
               <div style={{fontSize:14,fontWeight:500,color:C.gray800}}>{T.cycleTitle}</div>
               <div style={{fontSize:11,color:C.gray400,marginTop:2}}>{T.cycleSub}</div>
             </div>
-            <button onClick={()=>setCycleOn(v=>!v)} style={{width:44,height:26,borderRadius:13,border:"none",cursor:"pointer",background:cycleOn?C.tiffany500:"#DDD",position:"relative",transition:"background .2s"}}>
+            <button onClick={()=>setCycleOn(v=>!v)} style={{width:44,height:26,borderRadius:13,border:"none",cursor:"pointer",background:cycleOn?C.teal400:"#DDD",position:"relative",transition:"background .2s"}}>
               <div style={{position:"absolute",top:3,left:cycleOn?20:3,width:20,height:20,borderRadius:"50%",background:"#fff",transition:"left .2s"}}/>
             </button>
           </div>
@@ -704,9 +614,9 @@ function TabTimer(){
           <div style={{display:"flex",flexDirection:"column",gap:8}}>
             {PLANS.map(p=>(
               <button key={p.id} onClick={()=>{if(!isActive)setPlanId(p.id);}}
-                style={{padding:"12px 14px",borderRadius:11,cursor:isActive?"not-allowed":"pointer",border:`1.5px solid ${planId===p.id?C.tiffany500:"#E8E8E2"}`,background:planId===p.id?C.tiffany50:"#FAFAF8",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                style={{padding:"12px 14px",borderRadius:11,cursor:isActive?"not-allowed":"pointer",border:`1.5px solid ${planId===p.id?C.teal400:"#E8E8E2"}`,background:planId===p.id?C.teal50:"#FAFAF8",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                 <div style={{textAlign:"left"}}>
-                  <span style={{fontSize:14,fontWeight:500,color:planId===p.id?C.tiffany700:C.gray800}}>{p.id}</span>
+                  <span style={{fontSize:14,fontWeight:500,color:planId===p.id?C.teal600:C.gray800}}>{p.id}</span>
                   <span style={{fontSize:11,color:C.gray400,marginLeft:8}}>{T.planSub[p.id]}</span>
                 </div>
                 <span style={{fontSize:11,color:C.gray400}}>{T.fastHours(p.h)}</span>
@@ -721,7 +631,7 @@ function TabTimer(){
           <div style={{display:"flex",gap:8}}>
             {["zh","en"].map(l=>(
               <button key={l} onClick={()=>setLang(l)}
-                style={{flex:1,padding:"10px",borderRadius:11,cursor:"pointer",border:`1.5px solid ${lang===l?C.tiffany500:"#E8E8E2"}`,background:lang===l?C.tiffany50:"#FAFAF8",fontSize:13,fontWeight:500,color:lang===l?C.tiffany700:C.gray400}}>
+                style={{flex:1,padding:"10px",borderRadius:11,cursor:"pointer",border:`1.5px solid ${lang===l?C.teal400:"#E8E8E2"}`,background:lang===l?C.teal50:"#FAFAF8",fontSize:13,fontWeight:500,color:lang===l?C.teal600:C.gray400}}>
                 {l==="zh"?"中文（台灣）":"English"}
               </button>
             ))}
@@ -748,35 +658,35 @@ function TabTimer(){
   ];
 
   return(
-    <div style={{fontFamily:"'DM Sans',system-ui,sans-serif",maxWidth:420,margin:"0 auto",background:"linear-gradient(180deg,#FBFAF7 0%, #F7F6F2 55%, #F3F1EC 100%)",minHeight:"100vh",display:"flex",flexDirection:"column"}}>
+    <div style={{fontFamily:"'DM Sans',system-ui,sans-serif",maxWidth:420,margin:"0 auto",background:"#FAFAF8",minHeight:"100vh",display:"flex",flexDirection:"column"}}>
       {toast&&(
-        <div style={{position:"fixed",top:16,left:"50%",transform:"translateX(-50%)",background:C.tiffany800,color:"#fff",padding:"10px 18px",borderRadius:12,fontSize:13,zIndex:999,maxWidth:360,textAlign:"center",lineHeight:1.5}}>
+        <div style={{position:"fixed",top:16,left:"50%",transform:"translateX(-50%)",background:C.teal800,color:"#fff",padding:"10px 18px",borderRadius:12,fontSize:13,zIndex:999,maxWidth:360,textAlign:"center",lineHeight:1.5}}>
           {toast}
         </div>
       )}
-      <div style={{padding:"14px 20px 12px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid rgba(68,68,65,0.05)",background:"rgba(247,246,242,0.88)",backdropFilter:"blur(12px)"}}>
+      <div style={{padding:"14px 20px 10px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"0.5px solid #E8E8E2",background:"#FAFAF8"}}>
         <div>
-          <div style={{fontSize:18,fontWeight:600,color:C.gray800,letterSpacing:-0.2}}>{T.appName}</div>
-          <div style={{fontSize:11,color:C.gray400,fontWeight:500,marginTop:2}}>{lang==="zh"?"今天的節奏":"Today’s rhythm"}</div>
+          <span style={{fontSize:16,fontWeight:500,color:C.gray800}}>{T.appName}</span>
+          {streak>0&&<span style={{fontSize:11,color:C.teal600,marginLeft:8}}>{T.streakDays(streak)}</span>}
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          {pData&&<div style={{fontSize:11,padding:"4px 10px",borderRadius:999,background:C.lavender50,color:C.lavender700,fontWeight:500}}>{pI18n.name} · Day {cDay}</div>}
-          <button onClick={toggleLang} style={{padding:"5px 10px",borderRadius:999,border:"0.5px solid #DDD",background:"#fff",fontSize:11,cursor:"pointer",color:C.gray800,fontWeight:500}}>{T.langLabel}</button>
+          {pData&&<div style={{fontSize:11,padding:"3px 10px",borderRadius:20,background:pData.bg,color:pData.txt,fontWeight:500}}>{pI18n.name} · {cDay}</div>}
+          <button onClick={toggleLang} style={{padding:"4px 10px",borderRadius:20,border:"0.5px solid #DDD",background:"#fff",fontSize:11,cursor:"pointer",color:C.gray800,fontWeight:500}}>{T.langLabel}</button>
         </div>
       </div>
-      <div style={{flex:1,padding:"0 20px 104px",overflowY:"auto"}}>
+      <div style={{flex:1,padding:"0 20px 90px",overflowY:"auto"}}>
         {tab==="timer"&&<TabTimer/>}
         {tab==="history"&&<TabHistory/>}
         {tab==="weight"&&<TabWeight/>}
         {tab==="settings"&&<TabSettings/>}
       </div>
-      <div style={{position:"fixed",bottom:14,left:"50%",transform:"translateX(-50%)",width:"calc(100% - 32px)",maxWidth:388,display:"flex",justifyContent:"space-around",padding:"10px 8px",background:"rgba(255,255,255,0.90)",border:"1px solid rgba(68,68,65,0.05)",borderRadius:24,boxShadow:"0 10px 30px rgba(0,0,0,0.08)",backdropFilter:"blur(16px)",zIndex:100}}>
+      <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:420,display:"flex",justifyContent:"space-around",padding:"9px 0 13px",background:"#FAFAF8",borderTop:"0.5px solid #E8E8E2",zIndex:100}}>
         {TABS.map(tb=>{
           const active=tab===tb.id;
           return(
-            <button key={tb.id} onClick={()=>setTab(tb.id)} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,border:"none",background:active?C.tiffany50:"transparent",cursor:"pointer",padding:"8px 14px",borderRadius:999}}>
-              {tb.icon(active?C.tiffany500:C.gray200)}
-              <span style={{fontSize:10,fontWeight:600,color:active?C.tiffany700:C.gray400}}>{tb.label}</span>
+            <button key={tb.id} onClick={()=>setTab(tb.id)} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,border:"none",background:"none",cursor:"pointer",padding:"0 12px"}}>
+              {tb.icon(active?C.teal400:C.gray200)}
+              <span style={{fontSize:10,fontWeight:500,color:active?C.teal400:C.gray200}}>{tb.label}</span>
             </button>
           );
         })}
